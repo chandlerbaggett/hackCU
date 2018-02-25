@@ -43,3 +43,4 @@ X_train_tfidf = tfidf_transformer.fit_transform(X_train_counts)
 
 clf = MultinomialNB().fit(X_train_tfidf, y_train.astype(str))
 
+print(clf.predict(count_vect.transform(["abcde"])))
