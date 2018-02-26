@@ -37,7 +37,7 @@ from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.naive_bayes import MultinomialNB
 
 X_train, X_test, y_train, y_test = train_test_split(df['description'], df['variety'], test_size=.2, random_state = 0)
-count_vect = CountVectorizer(ngram_range = (1,2), stop_words='english')
+count_vect = CountVectorizer(stop_words='english')
 X_train_counts = count_vect.fit_transform(X_train)
 tfidf_transformer = TfidfTransformer()
 X_train_tfidf = tfidf_transformer.fit_transform(X_train_counts)
@@ -49,7 +49,18 @@ nb.fit(X_train_tfidf, y_train)
 X_test_counts = count_vect.transform(X_test)
 X_test_tfidf = tfidf_transformer.transform(X_test_counts)
 
+with open('wineCharacteristics.txt', 'r') as myfile:
+	data = myfile.read().replace('\n', '')
+
+#print(data)
+
+data_counts = count_vect.transform([data])
+data_tfidf = tfidf_transformer.transform(data_counts)
+
+classification = nb.predict(data_tfidf)[0]
+print(classification)
+
 from sklearn import metrics
 
-y_pred_class = nb.predict(X_test_tfidf)
-print(metrics.accuracy_score(y_test, y_pred_class))
+#y_pred_class = nb.predict(X_test_tfidf)
+#print(metrics.accuracy_score(y_test, y_pred_class))
